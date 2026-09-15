@@ -1,3 +1,4 @@
+
 name: PhysioGhar Backend CI
 
 on:
@@ -9,6 +10,9 @@ on:
     branches:
       - main
       - dev
+
+permissions:
+  contents: write
 
 jobs:
   test:
@@ -26,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt         
+          python -m pip install -r requirements.txt
 
       - name: Run Django checks
         env:
@@ -39,3 +43,21 @@ jobs:
           DB_PORT: "5432"
         run: |
           python manage.py check
+
+  sync-main:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Sync dev to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git push origin dev:main
