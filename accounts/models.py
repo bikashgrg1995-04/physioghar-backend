@@ -108,6 +108,8 @@ class TherapistProfile(models.Model):
         default=True,
     )
 
+    avatar = models.ImageField( upload_to="therapist_avatars/", blank=True, null=True, )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
