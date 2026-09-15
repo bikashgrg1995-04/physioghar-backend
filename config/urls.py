@@ -5,6 +5,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from accounts.views import LogoutView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -18,4 +20,10 @@ urlpatterns = [
         TokenRefreshView.as_view(),
         name="token_refresh",
     ),
+
+    path(
+    "api/v1/auth/logout/",
+    LogoutView.as_view(),
+    name="logout",
+),
 ]
