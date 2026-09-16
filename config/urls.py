@@ -20,10 +20,10 @@ urlpatterns = [
     #     include("sessions.urls"),
     # ),
 
-    # path(
-    #     "api/v1/schedules/",
-    #     include("schedules.urls"),
-    # ),
+    path(
+        "api/v1/schedules/",
+        include("schedules.urls"),
+    ),
 
     # path(
     #     "api/v1/complaints/",
