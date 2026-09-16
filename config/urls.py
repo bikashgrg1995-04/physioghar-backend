@@ -15,10 +15,10 @@ urlpatterns = [
         include("patients.urls"),
     ),
 
-    # path(
-    #     "api/v1/sessions/",
-    #     include("sessions.urls"),
-    # ),
+    path(
+        "api/v1/sessions/",
+        include("session_management.urls"),
+    ),
 
     path(
         "api/v1/schedules/",

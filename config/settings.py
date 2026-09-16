@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "accounts",
     "patients",
     "schedules",
+    'session_management',
 ]
 
 MIDDLEWARE = [
