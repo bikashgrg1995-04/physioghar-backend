@@ -58,3 +58,37 @@ class Patient(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PatientNote(models.Model):
+    therapist = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="patient_notes",
+    )
+
+    patient = models.ForeignKey(
+        "Patient",
+        on_delete=models.CASCADE,
+        related_name="notes",
+    )
+
+    content = models.TextField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return (
+            f"{self.patient.name} - "
+            f"Note {self.id}"
+        )
+

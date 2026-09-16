@@ -29,6 +29,7 @@ class SessionListCreateView(
             )
         )
 
+        # Filter by session status.
         session_status = self.request.query_params.get(
             "status",
         )
@@ -36,6 +37,16 @@ class SessionListCreateView(
         if session_status:
             queryset = queryset.filter(
                 status=session_status,
+            )
+
+        # Filter by patient. 
+        patient_id = self.request.query_params.get( 
+            "patient", 
+        ) 
+
+        if patient_id: 
+            queryset = queryset.filter( 
+                patient_id=patient_id, 
             )
 
         return queryset
