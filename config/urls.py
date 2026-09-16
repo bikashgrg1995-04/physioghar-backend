@@ -10,10 +10,10 @@ urlpatterns = [
 
     path( "api/v1/", include("accounts.urls"), ),
 
-    # path(
-    #     "api/v1/patients/",
-    #     include("patients.urls"),
-    # ),
+    path(
+        "api/v1/patients/",
+        include("patients.urls"),
+    ),
 
     # path(
     #     "api/v1/sessions/",
