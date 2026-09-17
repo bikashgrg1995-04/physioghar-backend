@@ -25,10 +25,10 @@ urlpatterns = [
         include("schedules.urls"),
     ),
 
-    # path(
-    #     "api/v1/complaints/",
-    #     include("complaints.urls"),
-    # ),
+    path(
+    "api/v1/complaints/",
+    include("complaints.urls"),
+    ),
 ]
 
 

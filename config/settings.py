@@ -59,6 +59,8 @@ INSTALLED_APPS = [
     "patients",
     "schedules",
     'session_management',
+
+    'complaints',
 ]
 
 MIDDLEWARE = [
