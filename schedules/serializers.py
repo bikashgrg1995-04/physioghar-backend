@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 
 from .models import ScheduleSlot
@@ -7,6 +6,8 @@ from .models import ScheduleSlot
 class ScheduleSlotSerializer(
     serializers.ModelSerializer,
 ):
+    session_id = serializers.SerializerMethodField()
+
     class Meta:
         model = ScheduleSlot
         fields = (
@@ -14,10 +15,16 @@ class ScheduleSlotSerializer(
             "date",
             "time",
             "status",
+            "session_id",
         )
         read_only_fields = (
             "id",
+            "session_id",
         )
+
+    def get_session_id(self, obj):
+        session = obj.sessions.order_by("-created_at").first()
+        return session.id if session else None
 
     def validate(self, attrs):
         date = attrs.get(
@@ -49,7 +56,5 @@ class ScheduleSlotSerializer(
                         "for this date and time."
                     ),
                 })
-
-        
 
         return attrs
