@@ -106,10 +106,6 @@ class SessionListCreateView(
             status=SessionStatus.REQUESTED,
         )
 
-        schedule_slot.status = (
-            "booked"
-        )
-
         schedule_slot.save(
             update_fields=[
                 "status",
@@ -212,11 +208,8 @@ class SessionActionView(APIView):
             session,
         )
 
-    def _accept(
-        self,
-        request,
-        session,
-    ):
+    @transaction.atomic
+    def _accept(self, request, session):
         if session.status != SessionStatus.REQUESTED:
             return Response(
                 {
@@ -228,9 +221,34 @@ class SessionActionView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        session.status = SessionStatus.UPCOMING
+        schedule_slot = (
+            ScheduleSlot.objects
+            .select_for_update()
+            .get(
+                pk=session.schedule_slot_id,
+            )
+        )
 
+        if schedule_slot.status != ScheduleSlot.Status.OPEN:
+            return Response(
+                {
+                    "detail": (
+                        "This schedule slot is no longer available."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        session.status = SessionStatus.UPCOMING
         session.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ],
+        )
+
+        schedule_slot.status = ScheduleSlot.Status.BOOKED
+        schedule_slot.save(
             update_fields=[
                 "status",
                 "updated_at",
@@ -481,6 +499,14 @@ class SessionActionView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        schedule_slot = (
+            ScheduleSlot.objects
+            .select_for_update()
+            .get(
+                pk=session.schedule_slot_id,
+            )
+        )
+
         session.status = SessionStatus.COMPLETED
         session.notes = notes
 
@@ -492,11 +518,19 @@ class SessionActionView(APIView):
             ],
         )
 
+        schedule_slot.status = ScheduleSlot.Status.BLOCKED
+
+        schedule_slot.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ],
+        )
+
         return self._success_response(
             request,
             session,
         )
-
     @transaction.atomic
     def _cancel(
         self,

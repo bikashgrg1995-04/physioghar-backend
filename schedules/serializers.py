@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from session_management.models import SessionStatus
+
 from .models import ScheduleSlot
 
 
@@ -23,7 +25,18 @@ class ScheduleSlotSerializer(
         )
 
     def get_session_id(self, obj):
-        session = obj.sessions.order_by("-created_at").first()
+        session = (
+            obj.sessions
+            .filter(
+                status__in=[
+                    SessionStatus.REQUESTED,
+                    SessionStatus.UPCOMING,
+                ],
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
         return session.id if session else None
 
     def validate(self, attrs):
