@@ -333,19 +333,18 @@ The backend validates these state changes so that the Flutter application can re
 
 # Development / Testing Note
 
-For this assignment, the backend currently uses:
+For local development and physical Android device testing, the backend
+allows requests from the local development hosts configured in
+`ALLOWED_HOSTS`.
+
+The current development configuration includes:
 
 ```python
-ALLOWED_HOSTS = ["*"]
-```
-
-This is intentional for **development and testing purposes**, especially when testing the Flutter application on a physical Android device over a local Wi-Fi network where the computer's local IP may vary.
-
-This should **not be used as-is in a production deployment**.
-
-For a real production environment, `ALLOWED_HOSTS` would be restricted to the application's actual domain names or trusted hosts, together with proper production security configuration.
-
----
+ALLOWED_HOSTS = [
+    "192.168.1.69",
+    "localhost",
+    "127.0.0.1",
+]
 
 # Email Configuration
 
